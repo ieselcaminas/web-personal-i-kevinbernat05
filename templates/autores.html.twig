@@ -19,6 +19,7 @@
                 <td>{{ autor.nombre }}</td>
                 <td>{{ autor.fechaNacimiento|date('d/m/Y') }}</td>
                 <td>{{ autor.genero }}</td>
+
             </tr>
         {% else %}
             <tr>
@@ -33,4 +34,24 @@
 <a href="{{ path('insertar_autor') }}">
     <button>Añadir Autor</button>
 </a>
+
+<br>
+
+<!-- Botón para mostrar el desplegable -->
+<button onclick="document.getElementById('eliminar-form').style.display='block'">
+    Eliminar Autor
+</button>
+
+<!-- Formulario oculto por defecto -->
+<div id="eliminar-form" style="display:none; margin-top:10px;">
+    <form action="{{ path('eliminar_autor') }}" method="post">
+        <label for="autor_id">Selecciona un autor:</label>
+        <select name="autor_id" id="autor_id" required>
+            {% for autor in autores %}
+                <option value="{{ autor.id }}">{{ autor.nombre }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" style="margin-left:10px;">Eliminar</button>
+    </form>
+</div>
 {% endblock %}

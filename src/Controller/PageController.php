@@ -40,6 +40,19 @@ final class PageController extends AbstractController
         ]);
     }
 
+    #[Route('/eliminarAutor', name: 'eliminar_autor')]
+    public function eliminarAutor(Request $request, EntityManagerInterface $em): Response    {
+    $id = $request->request->get('autor_id');
+    $autor = $em->getRepository(Autor::class)->find($id);
+
+    if ($autor) {
+        $em->remove($autor);
+        $em->flush();
+    }
+
+    return $this->redirectToRoute('app_authors');
+    }   
+
     #[Route('/autores', name: 'app_authors')]
     public function verAutores(EntityManagerInterface $em): Response
     {
