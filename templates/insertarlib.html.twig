@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Insertar Libro{% endblock %}
+
+{% block body %}
+    <h2>Añadir un nuevo libro</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.titulo) }}
+        {{ form_row(form.genero) }}
+        {{ form_row(form.autor) }}
+        <button type="submit">Guardar</button>
+    {{ form_end(form) }}
+
+    <br>
+    <a href="{{ path('app_books') }}">⬅ Volver a la lista de libros</a>
+{% endblock %}

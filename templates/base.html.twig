@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Biblioteca{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Biblioteca Virtual</h1>
+        <nav>
+            <a href="{{ path('app_home') }}">Inicio</a>
+            <a href="{{ path('app_books') }}">Libros</a>
+            <a href="{{ path('app_authors') }}">Autores</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; {{ "now"|date("Y") }} - Proyecto Symfony</p>
+    </footer>
+</body>
+</html>

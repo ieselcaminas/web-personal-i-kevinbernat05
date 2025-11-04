@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Autores{% endblock %}
+
+{% block body %}
+<h2>Lista de Autores</h2>
+
+<table border="1" cellspacing="0" cellpadding="8">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Género</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for autor in autores %}
+            <tr>
+                <td>{{ autor.nombre }}</td>
+                <td>{{ autor.fechaNacimiento|date('d/m/Y') }}</td>
+                <td>{{ autor.genero }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">No hay autores registrados.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+
+<a href="{{ path('insertar_autor') }}">
+    <button>Añadir Autor</button>
+</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de Libros{% endblock %}
+
+{% block body %}
+    <h2>Listado de Libros</h2>
+
+    <table border="1" cellspacing="0" cellpadding="8">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Género</th>
+                <th>Autor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for libro in libros %}
+                <tr>
+                    <td>{{ libro.titulo }}</td>
+                    <td>{{ libro.genero }}</td>
+                    <td>{{ libro.autor.nombre }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No hay libros registrados.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+
+    <a href="{{ path('insertar_libro') }}">
+    <button>Añadir Libro</button>
+</a>
+{% endblock %}

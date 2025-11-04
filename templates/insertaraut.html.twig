@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Insertar Autor{% endblock %}
+
+{% block body %}
+<h2>Insertar nuevo autor</h2>
+
+{{ form_start(form) }}
+    <div>
+        {{ form_label(form.nombre) }}
+        {{ form_widget(form.nombre) }}
+    </div>
+
+    <div>
+        {{ form_label(form.fechaNacimiento) }}
+        {{ form_widget(form.fechaNacimiento) }}
+    </div>
+
+    <div>
+        {{ form_label(form.genero) }}
+        {{ form_widget(form.genero) }}
+    </div>
+
+    <button type="submit">Guardar</button>
+{{ form_end(form) }}
+
+<br>
+
+<a href="{{ path('app_authors') }}">Volver a la lista de autores</a>
+{% endblock %}
