@@ -30,7 +30,59 @@
 
     <br>
 
+    <a href="{{ path('buscar_libros') }}">
+    <button>Buscar Libros</button>
+    </a>
+    <br>
+
     <a href="{{ path('insertar_libro') }}">
     <button>Añadir Libro</button>
-</a>
+    </a>
+    <br>
+    <button type="button" onclick="document.getElementById('eliminar-libro-form').style.display='block'">
+        Eliminar Libro
+    </button>
+
+    <!-- Formulario oculto por defecto -->
+    <div id="eliminar-libro-form" style="display:none; margin-top:10px;">
+        <form action="{{ path('eliminar_libro') }}" method="post">
+            <label for="libro_id">Selecciona un libro:</label>
+            <select name="libro_id" id="libro_id" required>
+                {% for libro in libros %}
+                    <option value="{{ libro.id }}">{{ libro.titulo }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" style="margin-left:10px;">Eliminar</button>
+        </form>
+    </div>
+
+    <br>
+
+    <!-- Botón para mostrar el desplegable -->
+    <button type="button" onclick="document.getElementById('editar-form').style.display='block'">
+        Editar Libro
+    </button>
+
+    <!-- Formulario oculto por defecto -->
+    <div id="editar-form" style="display:none; margin-top:10px;">
+        <form id="form-editar-libro" onsubmit="redirigirEditar(event)">
+            <label for="libro_id">Selecciona un libro:</label>
+            <select id="libro_id" name="libro_id" required>
+                {% for libro in libros %}
+                    <option value="{{ libro.id }}">{{ libro.titulo }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" style="margin-left:10px;">Editar</button>
+        </form>
+    </div>
+
+    <script>
+    function redirigirEditar(event) {
+        event.preventDefault();
+        const id = document.getElementById('libro_id').value;
+        if (id) {
+            window.location.href = "{{ path('editar_libro', {'id': 'LIBRO_ID'}) }}".replace('LIBRO_ID', id);
+        }
+    }
+    </script>
 {% endblock %}

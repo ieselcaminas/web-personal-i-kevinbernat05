@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Autor{% endblock %}
+
+{% block body %}
+    <h2>Editar autor: {{ autor.nombre }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.nombre) }}
+        {{ form_row(form.fechaNacimiento) }}
+        {{ form_row(form.genero) }}
+        <br>
+        <button type="submit">Guardar cambios</button>
+    {{ form_end(form) }}
+
+    <br>
+    <a href="{{ path('app_authors') }}">⬅ Volver a la lista de autores</a>
+{% endblock %}

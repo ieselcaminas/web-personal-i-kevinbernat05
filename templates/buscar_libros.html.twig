@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Buscar Libros{% endblock %}
+
+{% block body %}
+<h2>Buscar Libros</h2>
+
+<form method="get" action="{{ path('buscar_libros') }}" style="margin-bottom: 20px;">
+    <input type="text" name="q" value="{{ termino }}" placeholder="Escribe el título del libro...">
+    <button type="submit">Buscar</button>
+</form>
+
+{% if libros is not empty %}
+    <ul>
+        {% for libro in libros %}
+            <li>
+                <strong>{{ libro.titulo }}</strong> — {{ libro.autor.nombre }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    {% if termino %}
+        <p>No se encontraron resultados para "{{ termino }}".</p>
+    {% endif %}
+{% endif %}
+{% endblock %}

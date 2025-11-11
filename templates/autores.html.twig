@@ -31,6 +31,11 @@
 
 <br>
 
+<a href="{{ path('buscar_autores') }}">
+    <button>Buscar Autor</button>
+    </a>
+    <br>
+
 <a href="{{ path('insertar_autor') }}">
     <button>Añadir Autor</button>
 </a>
@@ -54,4 +59,34 @@
         <button type="submit" style="margin-left:10px;">Eliminar</button>
     </form>
 </div>
+
+<br>
+
+<!-- Botón para mostrar el desplegable -->
+<button type="button" onclick="document.getElementById('editar-autor-form').style.display='block'">
+    Editar Autor
+</button>
+
+<!-- Formulario oculto por defecto -->
+<div id="editar-autor-form" style="display:none; margin-top:10px;">
+    <form id="form-editar-autor" onsubmit="redirigirEditarAutor(event)">
+        <label for="autor_id_edit">Selecciona un autor:</label>
+        <select id="autor_id_edit" name="autor_id" required>
+            {% for autor in autores %}
+                <option value="{{ autor.id }}">{{ autor.nombre }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" style="margin-left:10px;">Editar</button>
+    </form>
+</div>
+
+<script>
+function redirigirEditarAutor(event) {
+    event.preventDefault();
+    const id = document.getElementById('autor_id_edit').value;
+    if (id) {
+        window.location.href = "{{ path('editar_autor', {'id': 'AUTOR_ID'}) }}".replace('AUTOR_ID', id);
+    }
+}
+</script>
 {% endblock %}

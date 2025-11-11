@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Buscar Autores{% endblock %}
+
+{% block body %}
+<h2>Buscar Autores</h2>
+
+<form method="get" action="{{ path('buscar_autores') }}" style="margin-bottom: 15px;">
+    <input type="text" name="q" placeholder="Buscar autor..." value="{{ termino }}" required>
+    <button type="submit">Buscar</button>
+</form>
+
+{% if termino %}
+    <h3>Resultados para "{{ termino }}"</h3>
+
+    {% if autores is not empty %}
+        <ul>
+            {% for autor in autores %}
+                <li>
+                    <strong>{{ autor.nombre }}</strong> — 
+                    Nacido el {{ autor.fechaNacimiento ? autor.fechaNacimiento|date('d/m/Y') : 'Desconocida' }} — 
+                    Género: {{ autor.genero }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se encontraron autores con ese nombre.</p>
+    {% endif %}
+{% else %}
+    <p>Escribe algo para buscar un autor.</p>
+{% endif %}
+
+<a href="{{ path('app_authors') }}">⬅ Volver a la lista</a>
+{% endblock %}

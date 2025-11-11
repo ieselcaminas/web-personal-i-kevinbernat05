@@ -17,7 +17,7 @@ class Autor
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Nombre = null;
+    private ?string $nombre = null;
 
     #[ORM\Column(type: 'date')]
     private ?\DateTimeInterface $fechaNacimiento = null;
@@ -26,7 +26,7 @@ class Autor
     private ?string $Genero = null;
 
     // relación uno a muchos
-    #[ORM\OneToMany(mappedBy: 'autor', targetEntity: Libro::class)]
+    #[ORM\OneToMany(mappedBy: 'autor', targetEntity: Libro::class, cascade: ['remove'], orphanRemoval: true)]
     private Collection $libros;
 
     public function getId(): ?int
@@ -34,14 +34,14 @@ class Autor
         return $this->id;
     }
 
-    public function getNombre(): ?string
+    public function getnombre(): ?string
     {
-        return $this->Nombre;
+        return $this->nombre;
     }
 
-    public function setNombre(string $Nombre): static
+    public function setnombre(string $nombre): static
     {
-        $this->Nombre = $Nombre;
+        $this->nombre = $nombre;
 
         return $this;
     }

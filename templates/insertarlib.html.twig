@@ -8,10 +8,138 @@
     {{ form_start(form) }}
         {{ form_row(form.titulo) }}
         {{ form_row(form.genero) }}
-        {{ form_row(form.autor) }}
-        <button type="submit">Guardar</button>
+
+        <label for="autor_select">Autor</label>
+        {{ form_widget(form.autor) }}
+        <button type="button" id="openModal" style="margin-left:8px;">➕ Añadir autor</button>
+
+        <br><br>
+        <button type="submit">Guardar libro</button>
     {{ form_end(form) }}
 
     <br>
     <a href="{{ path('app_books') }}">⬅ Volver a la lista de libros</a>
+
+    {# --- Modal para crear autor sin salir de la página --- #}
+    <div id="authorModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span id="closeModal" class="modal-close">&times;</span>
+            <h3>Añadir autor</h3>
+
+            <form id="authorForm">
+                <div>
+                    <label for="nombre">Nombre</label><br>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div>
+                    <label for="fechaNacimiento">Fecha de nacimiento</label><br>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                </div>
+                <div>
+                    <label for="genero">Género</label><br>
+                    <select id="genero" name="genero" required>
+                        <option value="">Selecciona</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+
+                <div style="margin-top:10px;">
+                    <button type="submit">Guardar autor</button>
+                    <button type="button" id="cancelModal" style="margin-left:8px;">Cancelar</button>
+                </div>
+
+                <div id="authorFormMessage" style="margin-top:8px;color:red;display:none;"></div>
+            </form>
+        </div>
+    </div>
+
+    {# --- CSS mínimo para modal (puedes mover a tu CSS) --- #}
+    <style>
+    .modal {
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 18px;
+        border-radius: 6px;
+        width: 90%;
+        max-width: 420px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+    .modal-close {
+        float: right;
+        cursor: pointer;
+        font-size: 20px;
+    }
+    </style>
+
+    {# --- JS para manejar modal, submit AJAX y actualizar el select --- #}
+    <script>
+    (function(){
+        const openBtn = document.getElementById('openModal');
+        const modal = document.getElementById('authorModal');
+        const closeBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelModal');
+        const form = document.getElementById('authorForm');
+        const message = document.getElementById('authorFormMessage');
+        const autorSelect = document.getElementById('libro_autor');
+
+        function openModal(){ message.style.display='none'; modal.style.display = 'flex'; }
+        function closeModal(){ modal.style.display = 'none'; form.reset(); message.style.display='none'; }
+
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // Cerrar modal clicando fuera del contenido
+        window.addEventListener('click', function(e){
+            if(e.target === modal) closeModal();
+        });
+
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            message.style.display = 'none';
+            const formData = new FormData(form);
+
+            fetch('{{ path("api_autores_create") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(async (res) => {
+                const data = await res.json();
+                if (!res.ok) throw data;
+                return data;
+            })
+            .then((data) => {
+                // data: { id: ..., nombre: ... }
+                // Crear nueva option y seleccionarla
+                const option = new Option(data.nombre, data.id, true, true);
+                autorSelect.add(option);
+                // Si el select usa alguna librería, quizás necesites refrescarla aquí
+                closeModal();
+            })
+            .catch((err) => {
+                const errorMsg = err && err.error ? err.error : 'Error al crear autor.';
+                message.textContent = errorMsg;
+                message.style.display = 'block';
+            });
+        });
+    })();
+    </script>
 {% endblock %}
