@@ -24,6 +24,21 @@ class Libro
     #[ORM\JoinColumn(nullable: false)]
     private ?Autor $autor;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $imagen = null;
+
+    public function getImagen(): ?string
+    {
+        return $this->imagen;
+    }
+
+    public function setImagen(?string $imagen): self
+    {
+        $this->imagen = $imagen;
+
+        return $this;
+    }
+
     public function getAutor(): ?Autor
     {
         return $this->autor;

@@ -3,16 +3,35 @@
 {% block title %}Editar Autor{% endblock %}
 
 {% block body %}
-    <h2>Editar autor: {{ autor.nombre }}</h2>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow-sm p-4" style="width: 450px; background-color: #F5F5DC;">
+        <h2 class="card-title text-center mb-4">Editar Autor: {{ autor.nombre }}</h2>
 
-    {{ form_start(form) }}
-        {{ form_row(form.nombre) }}
-        {{ form_row(form.fechaNacimiento) }}
-        {{ form_row(form.genero) }}
-        <br>
-        <button type="submit">Guardar cambios</button>
-    {{ form_end(form) }}
+        {{ form_start(form, {'attr': {'class': 'd-flex flex-column gap-3'}}) }}
+            <div>
+                {{ form_label(form.nombre) }}
+                {{ form_widget(form.nombre, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.nombre) }}
+            </div>
 
-    <br>
-    <a href="{{ path('app_authors') }}">⬅ Volver a la lista de autores</a>
+            <div>
+                {{ form_label(form.fechaNacimiento) }}
+                {{ form_widget(form.fechaNacimiento, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.fechaNacimiento) }}
+            </div>
+
+            <div>
+                {{ form_label(form.genero) }}
+                {{ form_widget(form.genero, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.genero) }}
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mt-3">Guardar cambios</button>
+        {{ form_end(form) }}
+
+        <div class="text-center mt-3">
+            <a href="{{ path('app_authors') }}" class="btn btn-secondary">⬅ Volver a la lista de autores</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

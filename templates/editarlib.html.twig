@@ -3,17 +3,35 @@
 {% block title %}Editar Libro{% endblock %}
 
 {% block body %}
-    <h2>Editar Libro: {{ libro.titulo }}</h2>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow-sm p-4" style="width: 450px; background-color: #F5F5DC;">
+        <h2 class="card-title text-center mb-4">Editar Libro: {{ libro.titulo }}</h2>
 
-    {{ form_start(form) }}
-        {{ form_row(form.titulo) }}
-        {{ form_row(form.genero) }}
-        {{ form_row(form.autor) }}
+        {{ form_start(form, {'attr': {'class': 'd-flex flex-column gap-3'}}) }}
+            <div>
+                {{ form_label(form.titulo) }}
+                {{ form_widget(form.titulo, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.titulo) }}
+            </div>
 
-        <br>
-        <button type="submit">Guardar cambios</button>
-    {{ form_end(form) }}
+            <div>
+                {{ form_label(form.genero) }}
+                {{ form_widget(form.genero, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.genero) }}
+            </div>
 
-    <br>
-    <a href="{{ path('app_books') }}">⬅ Volver a la lista de libros</a>
+            <div>
+                {{ form_label(form.autor) }}
+                {{ form_widget(form.autor, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.autor) }}
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mt-3">Guardar cambios</button>
+        {{ form_end(form) }}
+
+        <div class="text-center mt-3">
+            <a href="{{ path('app_books') }}" class="btn btn-secondary">⬅ Volver a la lista de libros</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

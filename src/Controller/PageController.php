@@ -15,6 +15,8 @@ use App\Form\LibroType;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class PageController extends AbstractController
 {
@@ -123,24 +125,44 @@ final class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/insertarLibro', name: 'insertar_libro')]ç
+    #[Route('/insertarLibro', name: 'insertar_libro')]
     #[IsGranted('ROLE_USER')]
-    public function insertarLibro(Request $request, EntityManagerInterface $em): Response
+    public function insertarLibro(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
-        $libro = new Libro();
-        $form = $this->createForm(LibroType::class, $libro);
-        $form->handleRequest($request);
+    $libro = new Libro();
+    $form = $this->createForm(LibroType::class, $libro);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($libro);
-            $em->flush();
-            return $this->redirectToRoute('app_books');
+    if ($form->isSubmitted() && $form->isValid()) {
+        /** @var UploadedFile $imagenFile */
+        $imagenFile = $form->get('imagen')->getData();
+
+        if ($imagenFile) {
+            $originalFilename = pathinfo($imagenFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$imagenFile->guessExtension();
+
+            // Mueve el archivo a la carpeta uploads/libros
+            $imagenFile->move(
+                $this->getParameter('libros_directory'),
+                $newFilename
+            );
+
+            // Guarda solo el nombre del archivo en la entidad
+            $libro->setImagen($newFilename);
         }
 
-        return $this->render('insertarlib.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        $em->persist($libro);
+        $em->flush();
+
+        return $this->redirectToRoute('app_books');
     }
+
+    return $this->render('insertarlib.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
+
 
     #[Route('/eliminarLibro', name: 'eliminar_libro', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]

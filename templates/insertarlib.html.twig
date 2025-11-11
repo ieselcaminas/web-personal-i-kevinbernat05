@@ -26,6 +26,12 @@
                 <button type="button" class="btn btn-outline-primary btn-sm" id="openModal">➕ Añadir autor</button>
             </div>
 
+            <div>
+                {{ form_label(form.imagen, 'Portada (jpg, png)') }}
+                {{ form_widget(form.imagen, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.imagen) }}
+            </div>
+
             <button type="submit" class="btn btn-success w-100 mt-3">Guardar libro</button>
         {{ form_end(form) }}
 
@@ -91,7 +97,7 @@
 }
 </style>
 
-{# --- JS para modal y submit AJAX (igual que antes) --- #}
+{# --- JS para modal y submit AJAX --- #}
 <script>
 (function(){
     const openBtn = document.getElementById('openModal');
