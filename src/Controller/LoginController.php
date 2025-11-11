@@ -22,13 +22,11 @@ final class LoginController extends AbstractController
         ]);
     }
 
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(Request $request): Response
+    #[Route('/logout', name: 'app_logout', methods:["GET"])]
+    public function logout(): void
     {
-        return $this->redirectToRoute('app_login');
+        // controller can be blank: it will never be called!
+        throw new \Exception('Don\'t forget to activate logout in security.yaml');
     }
-
-
-
 
 }

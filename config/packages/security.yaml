@@ -23,7 +23,7 @@ security:
                 default_target_path: /
                 always_use_default_target_path: true
             logout:
-                path: logout
+                path: /logout
                 target: app_login
 
     access_control:

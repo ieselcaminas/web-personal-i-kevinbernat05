@@ -1,145 +1,144 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Insertar Libro{% endblock %}
+{% block title %}Añadir Libro{% endblock %}
 
 {% block body %}
-    <h2>Añadir un nuevo libro</h2>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow-sm p-4" style="width: 450px; background-color: #F5F5DC;">
+        <h2 class="card-title text-center mb-4">Añadir un nuevo libro</h2>
 
-    {{ form_start(form) }}
-        {{ form_row(form.titulo) }}
-        {{ form_row(form.genero) }}
+        {{ form_start(form, {'attr': {'class': 'd-flex flex-column gap-3'}}) }}
+            <div>
+                {{ form_label(form.titulo) }}
+                {{ form_widget(form.titulo, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.titulo) }}
+            </div>
 
-        <label for="autor_select">Autor</label>
-        {{ form_widget(form.autor) }}
-        <button type="button" id="openModal" style="margin-left:8px;">➕ Añadir autor</button>
+            <div>
+                {{ form_label(form.genero) }}
+                {{ form_widget(form.genero, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.genero) }}
+            </div>
 
-        <br><br>
-        <button type="submit">Guardar libro</button>
-    {{ form_end(form) }}
+            <div class="d-flex align-items-center gap-2">
+                <label for="autor_select" class="form-label">Autor</label>
+                {{ form_widget(form.autor, {'attr': {'class': 'form-select'}}) }}
+                <button type="button" class="btn btn-outline-primary btn-sm" id="openModal">➕ Añadir autor</button>
+            </div>
 
-    <br>
-    <a href="{{ path('app_books') }}">⬅ Volver a la lista de libros</a>
+            <button type="submit" class="btn btn-success w-100 mt-3">Guardar libro</button>
+        {{ form_end(form) }}
 
-    {# --- Modal para crear autor sin salir de la página --- #}
-    <div id="authorModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span id="closeModal" class="modal-close">&times;</span>
-            <h3>Añadir autor</h3>
-
-            <form id="authorForm">
-                <div>
-                    <label for="nombre">Nombre</label><br>
-                    <input type="text" id="nombre" name="nombre" required>
-                </div>
-                <div>
-                    <label for="fechaNacimiento">Fecha de nacimiento</label><br>
-                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
-                </div>
-                <div>
-                    <label for="genero">Género</label><br>
-                    <select id="genero" name="genero" required>
-                        <option value="">Selecciona</option>
-                        <option value="Masculino">Masculino</option>
-                        <option value="Femenino">Femenino</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-
-
-                <div style="margin-top:10px;">
-                    <button type="submit">Guardar autor</button>
-                    <button type="button" id="cancelModal" style="margin-left:8px;">Cancelar</button>
-                </div>
-
-                <div id="authorFormMessage" style="margin-top:8px;color:red;display:none;"></div>
-            </form>
+        <div class="text-center mt-3">
+            <a href="{{ path('app_books') }}" class="btn btn-secondary">⬅ Volver a la lista de libros</a>
         </div>
     </div>
+</div>
 
-    {# --- CSS mínimo para modal (puedes mover a tu CSS) --- #}
-    <style>
-    .modal {
-        position: fixed;
-        z-index: 9999;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal-content {
-        background: #fff;
-        padding: 18px;
-        border-radius: 6px;
-        width: 90%;
-        max-width: 420px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-    }
-    .modal-close {
-        float: right;
-        cursor: pointer;
-        font-size: 20px;
-    }
-    </style>
+{# --- Modal para crear autor --- #}
+<div id="authorModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span id="closeModal" class="modal-close">&times;</span>
+        <h3>Añadir autor</h3>
 
-    {# --- JS para manejar modal, submit AJAX y actualizar el select --- #}
-    <script>
-    (function(){
-        const openBtn = document.getElementById('openModal');
-        const modal = document.getElementById('authorModal');
-        const closeBtn = document.getElementById('closeModal');
-        const cancelBtn = document.getElementById('cancelModal');
-        const form = document.getElementById('authorForm');
-        const message = document.getElementById('authorFormMessage');
-        const autorSelect = document.getElementById('libro_autor');
+        <form id="authorForm" class="d-flex flex-column gap-2">
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required class="form-control">
+            <input type="date" id="fechaNacimiento" name="fechaNacimiento" required class="form-control">
+            <select id="genero" name="genero" required class="form-select">
+                <option value="">Selecciona género</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+            </select>
 
-        function openModal(){ message.style.display='none'; modal.style.display = 'flex'; }
-        function closeModal(){ modal.style.display = 'none'; form.reset(); message.style.display='none'; }
+            <div class="d-flex gap-2 mt-2">
+                <button type="submit" class="btn btn-success w-50">Guardar</button>
+                <button type="button" class="btn btn-secondary w-50" id="cancelModal">Cancelar</button>
+            </div>
 
-        openBtn.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
-        cancelBtn.addEventListener('click', closeModal);
+            <div id="authorFormMessage" class="text-danger mt-2" style="display:none;"></div>
+        </form>
+    </div>
+</div>
 
-        // Cerrar modal clicando fuera del contenido
-        window.addEventListener('click', function(e){
-            if(e.target === modal) closeModal();
+{# --- CSS mínimo para modal --- #}
+<style>
+.modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content {
+    background: #fff;
+    padding: 18px;
+    border-radius: 6px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+}
+.modal-close {
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+}
+</style>
+
+{# --- JS para modal y submit AJAX (igual que antes) --- #}
+<script>
+(function(){
+    const openBtn = document.getElementById('openModal');
+    const modal = document.getElementById('authorModal');
+    const closeBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelModal');
+    const form = document.getElementById('authorForm');
+    const message = document.getElementById('authorFormMessage');
+    const autorSelect = document.getElementById('libro_autor');
+
+    function openModal(){ message.style.display='none'; modal.style.display = 'flex'; }
+    function closeModal(){ modal.style.display = 'none'; form.reset(); message.style.display='none'; }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    window.addEventListener('click', function(e){
+        if(e.target === modal) closeModal();
+    });
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        message.style.display = 'none';
+        const formData = new FormData(form);
+
+        fetch('{{ path("api_autores_create") }}', {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(async res => {
+            const data = await res.json();
+            if (!res.ok) throw data;
+            return data;
+        })
+        .then(data => {
+            const option = new Option(data.nombre, data.id, true, true);
+            autorSelect.add(option);
+            closeModal();
+        })
+        .catch(err => {
+            const errorMsg = err && err.error ? err.error : 'Error al crear autor.';
+            message.textContent = errorMsg;
+            message.style.display = 'block';
         });
-
-        form.addEventListener('submit', function(e){
-            e.preventDefault();
-            message.style.display = 'none';
-            const formData = new FormData(form);
-
-            fetch('{{ path("api_autores_create") }}', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(async (res) => {
-                const data = await res.json();
-                if (!res.ok) throw data;
-                return data;
-            })
-            .then((data) => {
-                // data: { id: ..., nombre: ... }
-                // Crear nueva option y seleccionarla
-                const option = new Option(data.nombre, data.id, true, true);
-                autorSelect.add(option);
-                // Si el select usa alguna librería, quizás necesites refrescarla aquí
-                closeModal();
-            })
-            .catch((err) => {
-                const errorMsg = err && err.error ? err.error : 'Error al crear autor.';
-                message.textContent = errorMsg;
-                message.style.display = 'block';
-            });
-        });
-    })();
-    </script>
+    });
+})();
+</script>
 {% endblock %}

@@ -3,90 +3,33 @@
 {% block title %}Autores{% endblock %}
 
 {% block body %}
-<h2>Lista de Autores</h2>
+<h2 class="text-center mb-4">Lista de Autores</h2>
 
-<table border="1" cellspacing="0" cellpadding="8">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Fecha de Nacimiento</th>
-            <th>Género</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for autor in autores %}
-            <tr>
-                <td>{{ autor.nombre }}</td>
-                <td>{{ autor.fechaNacimiento|date('d/m/Y') }}</td>
-                <td>{{ autor.genero }}</td>
-
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">No hay autores registrados.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<br>
-
-<a href="{{ path('buscar_autores') }}">
-    <button>Buscar Autor</button>
-    </a>
-    <br>
-
-<a href="{{ path('insertar_autor') }}">
-    <button>Añadir Autor</button>
-</a>
-
-<br>
-
-<!-- Botón para mostrar el desplegable -->
-<button onclick="document.getElementById('eliminar-form').style.display='block'">
-    Eliminar Autor
-</button>
-
-<!-- Formulario oculto por defecto -->
-<div id="eliminar-form" style="display:none; margin-top:10px;">
-    <form action="{{ path('eliminar_autor') }}" method="post">
-        <label for="autor_id">Selecciona un autor:</label>
-        <select name="autor_id" id="autor_id" required>
-            {% for autor in autores %}
-                <option value="{{ autor.id }}">{{ autor.nombre }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" style="margin-left:10px;">Eliminar</button>
-    </form>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for autor in autores %}
+        <div class="col">
+            <div class="card h-100 shadow-sm" style="background-color: #F5F5DC;">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ autor.nombre }}</h5>
+                    <p class="card-text mb-1"><strong>Fecha de nacimiento:</strong> {{ autor.fechaNacimiento|date('d/m/Y') }}</p>
+                    <p class="card-text mb-3"><strong>Género:</strong> {{ autor.genero }}</p>
+                    <div class="mt-auto d-flex gap-2">
+                        <a href="{{ path('editar_autor', {'id': autor.id}) }}" class="btn btn-primary w-50">Editar</a>
+                        <form action="{{ path('eliminar_autor') }}" method="post" class="w-50">
+                            <input type="hidden" name="autor_id" value="{{ autor.id }}">
+                            <button type="submit" class="btn btn-danger w-100">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-center">No hay autores registrados.</p>
+    {% endfor %}
 </div>
 
-<br>
-
-<!-- Botón para mostrar el desplegable -->
-<button type="button" onclick="document.getElementById('editar-autor-form').style.display='block'">
-    Editar Autor
-</button>
-
-<!-- Formulario oculto por defecto -->
-<div id="editar-autor-form" style="display:none; margin-top:10px;">
-    <form id="form-editar-autor" onsubmit="redirigirEditarAutor(event)">
-        <label for="autor_id_edit">Selecciona un autor:</label>
-        <select id="autor_id_edit" name="autor_id" required>
-            {% for autor in autores %}
-                <option value="{{ autor.id }}">{{ autor.nombre }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" style="margin-left:10px;">Editar</button>
-    </form>
+<div class="mt-4 text-center">
+    <a href="{{ path('insertar_autor') }}" class="btn btn-success me-2">Añadir Autor</a>
+    <a href="{{ path('buscar_autores') }}" class="btn btn-secondary">Buscar Autor</a>
 </div>
-
-<script>
-function redirigirEditarAutor(event) {
-    event.preventDefault();
-    const id = document.getElementById('autor_id_edit').value;
-    if (id) {
-        window.location.href = "{{ path('editar_autor', {'id': 'AUTOR_ID'}) }}".replace('AUTOR_ID', id);
-    }
-}
-</script>
 {% endblock %}

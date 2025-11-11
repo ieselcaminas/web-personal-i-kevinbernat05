@@ -3,24 +3,35 @@
 {% block title %}Buscar Libros{% endblock %}
 
 {% block body %}
-<h2>Buscar Libros</h2>
+<div class="d-flex justify-content-center">
+    <div class="card shadow-sm p-4 w-100" style="max-width: 600px; background-color: #F5F5DC;">
+        <h2 class="card-title text-center mb-4">Buscar Libros</h2>
 
-<form method="get" action="{{ path('buscar_libros') }}" style="margin-bottom: 20px;">
-    <input type="text" name="q" value="{{ termino }}" placeholder="Escribe el título del libro...">
-    <button type="submit">Buscar</button>
-</form>
+        <form method="get" action="{{ path('buscar_libros') }}" class="d-flex gap-2 mb-4">
+            <input type="text" name="q" value="{{ termino }}" placeholder="Escribe el título del libro..." class="form-control">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
 
-{% if libros is not empty %}
-    <ul>
-        {% for libro in libros %}
-            <li>
-                <strong>{{ libro.titulo }}</strong> — {{ libro.autor.nombre }}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    {% if termino %}
-        <p>No se encontraron resultados para "{{ termino }}".</p>
-    {% endif %}
-{% endif %}
+        {% if libros is not empty %}
+            <div class="list-group">
+                {% for libro in libros %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ libro.titulo }}</strong> — {{ libro.autor.nombre }}
+                        </div>
+                        <a href="{{ path('editar_libro', {'id': libro.id}) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% if termino %}
+                <p class="text-center text-danger mt-3">No se encontraron resultados para "{{ termino }}".</p>
+            {% endif %}
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{{ path('app_books') }}" class="btn btn-secondary">⬅ Volver a la lista de libros</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

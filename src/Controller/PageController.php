@@ -14,6 +14,7 @@ use App\Entity\Libro;
 use App\Form\LibroType;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class PageController extends AbstractController
 {
@@ -25,8 +26,10 @@ final class PageController extends AbstractController
     }
 
     #[Route('/insertarAutor', name: 'insertar_autor')]
+    #[IsGranted('ROLE_USER')]
     public function insertarAutor(Request $request, EntityManagerInterface $em): Response
     {
+
         $autor = new Autor();
         $form = $this->createForm(AutorType::class, $autor);
         $form->handleRequest($request);
@@ -44,11 +47,12 @@ final class PageController extends AbstractController
     }
 
     #[Route('/eliminarAutor', name: 'eliminar_autor')]
+    #[IsGranted('ROLE_USER')]
     public function eliminarAutor(Request $request, EntityManagerInterface $em): Response    {
     $id = $request->request->get('autor_id');
     $autor = $em->getRepository(Autor::class)->find($id);
 
-    if ($autor) {
+    if ($autor) { 
         $em->remove($autor);
         $em->flush();
     }
@@ -57,6 +61,7 @@ final class PageController extends AbstractController
     }   
 
     #[Route('/autores', name: 'app_authors')]
+    #[IsGranted('ROLE_USER')]
     public function verAutores(EntityManagerInterface $em): Response
     {
         $repo = $em->getRepository(Autor::class);
@@ -68,6 +73,7 @@ final class PageController extends AbstractController
     }
 
     #[Route('/editarAutor/{id}', name: 'editar_autor')]
+    #[IsGranted('ROLE_USER')]
     public function editarAutor(Request $request, EntityManagerInterface $em, int $id): Response
     {
         $autor = $em->getRepository(Autor::class)->find($id);
@@ -87,6 +93,7 @@ final class PageController extends AbstractController
     }
 
     #[Route('/buscarAutores', name: 'buscar_autores', methods: ['GET']  )]
+    #[IsGranted('ROLE_USER')]
     public function buscarAutores(Request $request, EntityManagerInterface $em): Response
     {
     $termino = $request->query->get('q', '');
@@ -105,6 +112,7 @@ final class PageController extends AbstractController
     }   
 
     #[Route('/libros', name: 'app_books')]
+    #[IsGranted('ROLE_USER')]
     public function verLibros(EntityManagerInterface $em): Response
     {
         $repo = $em->getRepository(Libro::class);
@@ -115,7 +123,8 @@ final class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/insertarLibro', name: 'insertar_libro')]
+    #[Route('/insertarLibro', name: 'insertar_libro')]ç
+    #[IsGranted('ROLE_USER')]
     public function insertarLibro(Request $request, EntityManagerInterface $em): Response
     {
         $libro = new Libro();
@@ -134,6 +143,7 @@ final class PageController extends AbstractController
     }
 
     #[Route('/eliminarLibro', name: 'eliminar_libro', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
     public function eliminarLibro(Request $request, EntityManagerInterface $em): Response
     {
     $id = $request->request->get('libro_id');
@@ -148,6 +158,7 @@ final class PageController extends AbstractController
     }
 
     #[Route('/editarLibro/{id}', name: 'editar_libro')]
+    #[IsGranted('ROLE_USER')]
     public function editarLibro(Request $request, EntityManagerInterface $em, int $id): Response
     {
         $libro = $em->getRepository(Libro::class)->find($id);
@@ -167,6 +178,7 @@ final class PageController extends AbstractController
     }
 
     #[Route('/buscarLibros', name: 'buscar_libros', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function buscarLibros(Request $request, EntityManagerInterface $em): Response
     {
     $termino = $request->query->get('q', '');
@@ -187,6 +199,7 @@ final class PageController extends AbstractController
     }
 
     #[Route('/api/autores', name: 'api_autores_create', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
     public function apiCreateAutor(Request $request, EntityManagerInterface $em): JsonResponse
     {
     $nombre = $request->request->get('nombre');
